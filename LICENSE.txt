@@ -1,36 +1,3 @@
-py-babymaker
-============
-
-Python fast mock object factory.
-
-Use
-============
-
-```
-from babymaker import BabyMaker, EnumType, IntType, StringType, UUIDType
-
-fields = {
-    "id": UUIDType(),
-    "name": StringType(allowed_chars="abcdefg", min_size=10, max_size=22),
-    "gender": EnumType(choices=["dude", "lady", "dude looks like a lady"]),
-    "age": IntType(min_value=12, max_value=112)
-}
-female_of_the_species = BabyMaker(fields)
-one = female_of_the_species.make_one()
-
->> {'gender': 'dude', 'age': 12, 'id': 'fc7e45e8-6ebc-4c55-85e6-a59c32074d45', 'name': 'eafcecdcebg'}
-
-```
-
-
-Run the tests
-============
-nosetests -v --cover-package=babymaker --with-cover -s
-
-
-License
-============
-
 The MIT License (MIT)
 
 Copyright (c) 2014 SPS Commerce, Inc.

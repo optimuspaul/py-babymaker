@@ -2,6 +2,8 @@ import random
 import string
 import sys
 import uuid
+from datetime import datetime, timedelta
+
 
 class BabyMaker(object):
     """
@@ -9,13 +11,21 @@ class BabyMaker(object):
     """
     def __init__(self, fields):
         self.fields = fields
+        self.last_iteration = None
+        self.current_iteration = None
 
     def make_one(self):
-        one = dict()
+        """
+        TODO - allow a field to raise an exception that it requires another field before it
+            can be processed, which would retry the field after all other fields are done.
+            Will need to be careful of circular dependencies.
+        """
+        self.last_iteration = self.current_iteration
+        self.current_iteration = dict()
         for name, field in self.fields.iteritems():
             if hasattr(field, "emit"):
-                one[name] = field.emit(self)
-        return one
+                self.current_iteration[name] = field.emit(self)
+        return self.current_iteration
 
     def make_some(self, num):
         for x in range(num):
@@ -80,5 +90,54 @@ class UUIDType(FieldType):
         if self.format == "int":
             return uuid.uuid4().int
         return str(uuid.uuid4())
+
+
+class DatetimeType(FieldType):
+    """
+    For date and datetime types
+    """
+    def __init__(self, start, end, increment=False, include_time=True):
+        """
+        start - minimum date
+        end - maximum date
+        increment - if False then make_one just returns a random date within the range
+                    else a timedelta is expected and make_one would return an incrementing
+                    date within the range depending on +/- of the timedelta
+                    (there has got to be a better way to word this)
+        include_time - date vs datetime
+        """
+        self.start = start
+        self.end = end
+        self.increment = increment
+        if self.increment:
+            assert isinstance(self.increment, timedelta)
+        self.include_time = include_time
+        self.previous_value = None
+
+    def emit(self, schema):
+        if self.increment:
+            delta_force = self.increment.total_seconds()
+            if self.previous_value is None:
+                if delta_force > 0:
+                    result = self.start
+                else:
+                    result = self.end
+            else:
+                result = self.previous_value + self.increment
+            # wrap the values, if we go over or under then loop around.
+            if result > self.end:
+                result = self.start
+            elif result < self.start:
+                result = self.end
+        else:
+            range_delta = self.end - self.start
+            delta_force = timedelta(seconds=random.randint(0, int(range_delta.total_seconds())))
+            result = self.start + delta_force
+        if not self.include_time:
+            result = datetime(result.year, result.month, result.day)
+        self.previous_value = result
+        return result
+
+
 
 

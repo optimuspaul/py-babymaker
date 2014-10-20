@@ -1,7 +1,8 @@
-from babymaker import BabyMaker, EnumType, IntType, StringType, UUIDType, FieldType
+from babymaker import BabyMaker, EnumType, IntType, StringType, UUIDType, FieldType, DatetimeType
 import unittest
 import string
 import sys
+from datetime import datetime, timedelta
 
 
 class TestMakeSomeBabies(unittest.TestCase):
@@ -146,5 +147,80 @@ class TestMakeSomeBabies(unittest.TestCase):
         for one in some:
             the_id = one.get("id")
             self.assertIsNone(the_id)
+
+    def test_datetime_type(self):
+        start = datetime(1976, 7, 15)
+        end = datetime(1977, 7, 15)
+        fields = {
+            "created": DatetimeType(start, end)
+        }
+        female_of_the_species = BabyMaker(fields)
+        some = list(female_of_the_species.make_some(88))
+        self.assertEquals(len(some), 88)
+        for one in some:
+            created = one.get("created")
+            self.assertIsInstance(created, datetime)
+            self.assertTrue(created <= end)
+            self.assertTrue(created >= start)
+
+    def test_datetime_notime_type(self):
+        start = datetime(1976, 7, 15)
+        end = datetime(1977, 7, 15)
+        fields = {
+            "created": DatetimeType(start, end, include_time=False)
+        }
+        female_of_the_species = BabyMaker(fields)
+        some = list(female_of_the_species.make_some(88))
+        self.assertEquals(len(some), 88)
+        for one in some:
+            created = one.get("created")
+            self.assertIsInstance(created, datetime)
+            self.assertEquals(created.hour, 0)
+            self.assertEquals(created.minute, 0)
+            self.assertEquals(created.second, 0)
+            self.assertTrue(created <= end)
+            self.assertTrue(created >= start)
+
+    def test_datetime_incremental_type(self):
+        start = datetime(1976, 7, 15)
+        end = datetime(1977, 7, 15)
+        delta = timedelta(weeks=1)
+        fields = {
+            "created": DatetimeType(start, end, increment=delta)
+        }
+        female_of_the_species = BabyMaker(fields)
+        some = list(female_of_the_species.make_some(56))
+        self.assertEquals(len(some), 56)
+        test_value = start
+        for one in some:
+            created = one.get("created")
+            self.assertIsInstance(created, datetime)
+            self.assertTrue(created <= end)
+            self.assertTrue(created >= start)
+            self.assertEquals(created, test_value)
+            test_value += delta
+            if test_value >= end:
+                test_value = start
+
+    def test_datetime_decremental_type(self):
+        start = datetime(1976, 7, 15)
+        end = datetime(1977, 7, 15)
+        delta = timedelta(weeks=-1)
+        fields = {
+            "created": DatetimeType(start, end, increment=delta)
+        }
+        female_of_the_species = BabyMaker(fields)
+        some = list(female_of_the_species.make_some(56))
+        self.assertEquals(len(some), 56)
+        test_value = end
+        for one in some:
+            created = one.get("created")
+            self.assertIsInstance(created, datetime)
+            self.assertTrue(created <= end)
+            self.assertTrue(created >= start)
+            self.assertEquals(created, test_value)
+            test_value += delta
+            if test_value <= start:
+                test_value = end
 
 

@@ -25,11 +25,29 @@ class BabyMaker(object):
         for name, field in self.fields.iteritems():
             if hasattr(field, "emit"):
                 self.current_iteration[name] = field.emit(self)
-        return self.current_iteration
+        return DictObject(self.current_iteration)
 
     def make_some(self, num):
         for x in range(num):
             yield self.make_one()
+
+
+class DictObject(dict):
+    """
+    A dict implementation that provides several extra conveniences.
+    """
+    def __getitem__(self, key):
+        value = dict.__getitem__(self, key)
+        if type(value) is dict:
+            value = DictObject(value)
+            self[key] = value
+        return value
+
+    def __getattr__(self, name):
+        return self[name]
+
+    def __setattr__(self, name, value):
+        self[name] = value
 
 
 class FieldType(object):

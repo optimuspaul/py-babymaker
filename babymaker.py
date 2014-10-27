@@ -80,6 +80,20 @@ class IntType(FieldType):
     def emit(self, maker):
         return random.randint(self.min_value, self.max_value)
 
+class FloatType(FieldType):
+    """
+    floats, default random from 0.0 to 1.0
+    if max_value <= min_value then max_value = min_value * 2.0
+    """
+
+    def __init__(self, min_value = None, max_value=None):
+        self.max_value = max_value or 1.0
+        self.min_value = min_value or 0.0
+
+    def emit(self, schema):
+        if self.max_value <= self.min_value:
+            return random.uniform(self.min_value, self.max_value * 2.0)
+        return random.uniform(self.min_value, self.max_value)
 
 class EnumType(FieldType):
     """

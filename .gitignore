@@ -1,3 +1,5 @@
 .DS_Store
 .coverage
 *.pyc
+dist
+py_babymaker.egg-info

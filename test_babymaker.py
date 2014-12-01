@@ -106,6 +106,11 @@ class TestMakeSomeBabies(unittest.TestCase):
         self.assertIsInstance(the_id, float)
         self.assertTrue(the_id >= 0.0)
         self.assertTrue(the_id <= 1.0)
+        for baby in female_of_the_species.make_some(100):
+            the_id = baby.get("id")
+            self.assertIsInstance(the_id, float)
+            self.assertTrue(the_id >= 0.0)
+            self.assertTrue(the_id <= 1.0)
         fields = {
             "id": FloatType(min_value=1.0)
         }

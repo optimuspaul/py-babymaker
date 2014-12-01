@@ -1,4 +1,4 @@
-from babymaker import BabyMaker, EnumType, IntType, StringType, UUIDType, FieldType, DatetimeType
+from babymaker import BabyMaker, EnumType, IntType, StringType, UUIDType, FieldType, DatetimeType, FloatType
 import unittest
 import string
 import sys
@@ -86,6 +86,40 @@ class TestMakeSomeBabies(unittest.TestCase):
         self.assertIsInstance(the_id, (int, long))
         self.assertTrue(the_id >= 0)
         self.assertTrue(the_id <= sys.maxint)
+
+    def test_float_field(self):
+        fields = {
+            "id": FloatType(min_value=2.0, max_value=10.0)
+        }
+        female_of_the_species = BabyMaker(fields)
+        one = female_of_the_species.make_one()
+        the_id = one.get("id")
+        self.assertIsInstance(the_id, float)
+        self.assertTrue(the_id >= 2.0)
+        self.assertTrue(the_id <= 10.0)
+        fields = {
+            "id": FloatType()
+        }
+        female_of_the_species = BabyMaker(fields)
+        one = female_of_the_species.make_one()
+        the_id = one.get("id")
+        self.assertIsInstance(the_id, float)
+        self.assertTrue(the_id >= 0.0)
+        self.assertTrue(the_id <= 1.0)
+        for baby in female_of_the_species.make_some(100):
+            the_id = baby.get("id")
+            self.assertIsInstance(the_id, float)
+            self.assertTrue(the_id >= 0.0)
+            self.assertTrue(the_id <= 1.0)
+        fields = {
+            "id": FloatType(min_value=1.0)
+        }
+        female_of_the_species = BabyMaker(fields)
+        one = female_of_the_species.make_one()
+        the_id = one.get("id")
+        self.assertIsInstance(the_id, float)
+        self.assertTrue(the_id >= 1.0)
+        self.assertTrue(the_id <= 2.0)
 
     def test_string_field(self):
         fields = {

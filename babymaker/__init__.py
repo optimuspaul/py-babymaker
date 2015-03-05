@@ -170,6 +170,27 @@ class DatetimeType(FieldType):
         self.previous_value = result
         return result
 
+class ListType(FieldType):
 
+    def __init__(self, content_types, min_len=0, max_len=1, allow_duplicates=False):
+        self.content_types = content_types
+        self.min_len = min_len
+        self.max_len = max_len
+        self.allow_duplicates = allow_duplicates
+        if not content_types:
+            content_types = [StringType()]
+
+    def emit(self, schema):
+        if self.allow_duplicates:
+            result = list()
+            have_another = lambda x: result.append(x)
+        else:
+            result = set()
+            have_another = lambda x: result.add(x)
+        count = random.randint(self.min_len, self.max_len)
+        while len(result) < count:
+            type_to_make = random.choice(self.content_types)
+            have_another(type_to_make.emit(schema))
+        return list(result)
 
 

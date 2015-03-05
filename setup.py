@@ -34,7 +34,7 @@ THE SOFTWARE.
 
 setup(
     name='py-babymaker',
-    version='1.0.0',
+    version='1.0.1',
     license='MIT',
     packages=find_packages(),
     include_package_data=True,

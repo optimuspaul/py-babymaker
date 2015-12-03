@@ -55,6 +55,7 @@ class FieldType(object):
     def emit(self, schema):
         return None
 
+
 class StringType(FieldType):
     """
     Random string of characters.
@@ -80,13 +81,14 @@ class IntType(FieldType):
     def emit(self, maker):
         return random.randint(self.min_value, self.max_value)
 
+
 class FloatType(FieldType):
     """
     floats, default random from 0.0 to 1.0
     if max_value <= min_value then max_value = min_value * 2.0
     """
 
-    def __init__(self, min_value = None, max_value=None):
+    def __init__(self, min_value=None, max_value=None):
         self.max_value = max_value or 1.0
         self.min_value = min_value or 0.0
         if self.max_value <= self.min_value:
@@ -94,6 +96,7 @@ class FloatType(FieldType):
 
     def emit(self, schema):
         return random.uniform(self.min_value, self.max_value)
+
 
 class EnumType(FieldType):
     """
@@ -105,6 +108,14 @@ class EnumType(FieldType):
     def emit(self, schema):
         return random.choice(self.choices)
 
+
+class EmbedType(FieldType):
+    """Embeds a maker as a field for nested objects."""
+    def __init__(self, maker):
+        self.maker = maker
+
+    def emit(self, schema):
+        return self.maker.make_one()
 
 
 class UUIDType(FieldType):
@@ -170,6 +181,7 @@ class DatetimeType(FieldType):
         self.previous_value = result
         return result
 
+
 class ListType(FieldType):
 
     def __init__(self, content_types, min_len=0, max_len=1, allow_duplicates=False):
@@ -192,6 +204,7 @@ class ListType(FieldType):
             type_to_make = random.choice(self.content_types)
             have_another(type_to_make.emit(schema))
         return list(result)
+
 
 class ConstantField(FieldType):
     """

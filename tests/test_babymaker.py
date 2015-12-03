@@ -1,4 +1,4 @@
-from babymaker import BabyMaker, EnumType, IntType, StringType, UUIDType, FieldType, DatetimeType, FloatType
+from babymaker import BabyMaker, EnumType, IntType, StringType, UUIDType, FieldType, DatetimeType, FloatType, EmbedType
 import unittest
 import string
 import sys
@@ -257,4 +257,17 @@ class TestMakeSomeBabies(unittest.TestCase):
             if test_value <= start:
                 test_value = end
 
-
+    def test_embedded_maker(self):
+        fields = {
+            "id": UUIDType()
+        }
+        female_of_the_species = BabyMaker(fields)
+        fields2 = {
+            "inbed": EmbedType(female_of_the_species),
+            "id": UUIDType()
+        }
+        grandma = BabyMaker(fields2)
+        one = grandma.make_one()
+        self.assertTrue("id" in one)
+        self.assertTrue("inbed" in one)
+        self.assertTrue("id" in one.inbed)

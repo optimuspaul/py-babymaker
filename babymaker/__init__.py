@@ -22,7 +22,7 @@ class BabyMaker(object):
         """
         self.last_iteration = self.current_iteration
         self.current_iteration = dict()
-        for name, field in self.fields.iteritems():
+        for name, field in self.fields.items():
             if hasattr(field, "emit"):
                 self.current_iteration[name] = field.emit(self)
         return DictObject(self.current_iteration)
@@ -74,7 +74,7 @@ class IntType(FieldType):
     """
 
     def __init__(self, min_value=None, max_value=None):
-        self.max_value = max_value or sys.maxint
+        self.max_value = max_value or sys.maxsize
         self.min_value = min_value or 0
 
     def emit(self, maker):
@@ -193,4 +193,12 @@ class ListType(FieldType):
             have_another(type_to_make.emit(schema))
         return list(result)
 
+class ConstantField(FieldType):
+    """
+    A constant value
+    """
+    def __init__(self, value):
+        self.value = value
 
+    def emit(self, schema):
+        return self.value

@@ -54,7 +54,7 @@ class TestMakeSomeBabies(unittest.TestCase):
         female_of_the_species = BabyMaker(fields)
         one = female_of_the_species.make_one()
         the_id = one.get("id")
-        self.assertIsInstance(the_id, long)
+        self.assertIsInstance(the_id, int)
 
     def test_uuid_field_int_str_format(self):
         fields = {
@@ -65,7 +65,7 @@ class TestMakeSomeBabies(unittest.TestCase):
         the_id = one.get("id")
         for char in the_id:
             self.assertTrue(char in string.digits)
-        will_it_blend = long(the_id)
+        will_it_blend = int(the_id)
 
     def test_int_field(self):
         fields = {
@@ -74,7 +74,7 @@ class TestMakeSomeBabies(unittest.TestCase):
         female_of_the_species = BabyMaker(fields)
         one = female_of_the_species.make_one()
         the_id = one.get("id")
-        self.assertIsInstance(the_id, (int, long))
+        self.assertIsInstance(the_id, int)
         self.assertTrue(the_id >= 10)
         self.assertTrue(the_id <= 11)
         fields = {
@@ -83,9 +83,9 @@ class TestMakeSomeBabies(unittest.TestCase):
         female_of_the_species = BabyMaker(fields)
         one = female_of_the_species.make_one()
         the_id = one.get("id")
-        self.assertIsInstance(the_id, (int, long))
+        self.assertIsInstance(the_id, int)
         self.assertTrue(the_id >= 0)
-        self.assertTrue(the_id <= sys.maxint)
+        self.assertTrue(the_id <= sys.maxsize)
 
     def test_float_field(self):
         fields = {
@@ -128,7 +128,7 @@ class TestMakeSomeBabies(unittest.TestCase):
         female_of_the_species = BabyMaker(fields)
         one = female_of_the_species.make_one()
         the_id = one.get("id")
-        self.assertIsInstance(the_id, basestring)
+        self.assertIsInstance(the_id, str)
         for char in the_id:
             self.assertTrue(char in string.printable)
         self.assertTrue(len(the_id) >= 10)
@@ -139,7 +139,7 @@ class TestMakeSomeBabies(unittest.TestCase):
         female_of_the_species = BabyMaker(fields)
         one = female_of_the_species.make_one()
         the_id = one.get("id")
-        self.assertIsInstance(the_id, basestring)
+        self.assertIsInstance(the_id, str)
         for char in the_id:
             self.assertTrue(char in string.printable)
         self.assertTrue(len(the_id) >= 0)
@@ -153,7 +153,7 @@ class TestMakeSomeBabies(unittest.TestCase):
         female_of_the_species = BabyMaker(fields)
         one = female_of_the_species.make_one()
         the_id = one.get("id")
-        self.assertIsInstance(the_id, basestring)
+        self.assertIsInstance(the_id, str)
         for char in the_id:
             self.assertTrue(char in allowed_chars)
         self.assertTrue(len(the_id) >= 10)

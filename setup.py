@@ -10,7 +10,7 @@ py-babymaker - structured object creator.
 
 The MIT License (MIT)
 
-Copyright (c) 2014 SPS Commerce, Inc.
+Copyright (c) 2017 optimuspaul.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,13 +34,13 @@ THE SOFTWARE.
 
 setup(
     name='py-babymaker',
-    version='1.1.0',
+    version='1.2.1',
     license='MIT',
     packages=find_packages(),
     include_package_data=True,
     description='py-babymaker',
     long_description=README,
-    url='https://github.com/SPSCommerce/py-babymaker',
-    author='pjdecoursey',
-    author_email='webapps@spscommerce.com',
+    url='https://github.com/optimuspaul/py-babymaker',
+    author='optimuspaul',
+    author_email='paul@robotlove.guru',
 )
